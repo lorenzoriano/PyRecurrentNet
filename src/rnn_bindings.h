@@ -82,6 +82,15 @@ public:
 		RNN::set_W(vector(data));
 	}
 
+    PyObject* evolve(PyObject* o, uint steps) {
+        PyArrayObject* array = __array_from_object(o, m_input_size);
+        double* data = (double*)PyArray_DATA(array);
+        
+        vector out = RNN::evolve(data, steps);
+        return __convert_from_data(out, m_output_size);
+    }
+
+
 protected:
 	PyObject* __convert_from_data(vector data, uint size) const{
 

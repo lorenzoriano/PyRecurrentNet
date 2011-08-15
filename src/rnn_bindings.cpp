@@ -64,6 +64,7 @@ BOOST_PYTHON_MODULE(libcrnn){
     
     bp::class_<RNN_Wrapper> ("RNN", bp::init<unsigned int, unsigned int, unsigned int>() )
 	.def("__call__", &RNN_Wrapper::operator())
+	.def("evolve", &RNN_Wrapper::evolve)
 	.def("get_x", &RNN_Wrapper::get_x)
 	.def("get_bias", &RNN_Wrapper::get_bias)
 	.def("get_W", &RNN_Wrapper::get_W)

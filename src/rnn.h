@@ -27,6 +27,14 @@
 #include <string>
 #include <cstring>
 
+#ifdef _MSC_VER
+#include <float.h>  // for _isnan() on VC++
+#define isnan(x) _isnan(x)  // VC++ uses _isnan() instead of isnan()
+#define isinf(x) (!_finite(x) && !isnan(x))
+typedef unsigned int uint;
+#endif
+
+
 struct rnn_value_exception : std::exception
 {
     rnn_value_exception(std::string str) {
@@ -104,6 +112,16 @@ class RNN
 		vector call(vt* input) {
 			return this->operator()(input);
 		}
+
+        vector evolve(vt* input, unsigned int steps ) {
+            vector out;
+
+            for (unsigned int i=0; i<steps; i++)
+                out = call(input);
+            return out;
+        }
+        
+
 		void randomiseState() {
 		    for (unsigned int i = 0; i < this->m_size; i++) {
 			access(m_x,i) = rand() / vt(RAND_MAX);
