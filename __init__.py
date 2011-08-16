@@ -40,6 +40,22 @@ def chromosome_convert(chromosome):
     
     net.W = W 
     net.bias = bias
-    
         
+    return net
+
+def list_convert(params, input_size, output_size, hidden_size):
+    bias_size = hidden_size + output_size
+    
+    net = RNN(hidden_size, input_size, output_size)
+    array_W = np.array(params[:-bias_size]).reshape( (net.size-net.input_size, net.size) )
+    array_bias = np.array(params[len(params) - bias_size:] )
+    
+    W = np.empty((net.size, net.size))
+    bias = np.empty(net.size)
+    W[net.input_size:, :] = array_W
+    bias[net.input_size:] = array_bias
+    
+    net.W = W
+    net.bias = bias
+    
     return net
