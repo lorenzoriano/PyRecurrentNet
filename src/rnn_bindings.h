@@ -26,6 +26,7 @@ public:
 		double* data = (double*)PyArray_DATA(array);
 		vector out = RNN::operator()(data);
 
+        Py_XDECREF(array);
 		return __convert_from_data(out, m_output_size);
 	}
 
@@ -48,13 +49,15 @@ public:
 	void set_x(PyObject* o) {
 		PyArrayObject* array = __array_from_object(o, m_size);
 		double* array_data = (double*)PyArray_DATA(array);
-		vector data = vector(new vt[m_size]);
+
+        vector data = vector(new vt[m_size]);
 
 		for (unsigned int i=0; i<m_size; i++) {
 			data[i] = array_data[i];
 		}
 
 		RNN::set_x(data);
+        Py_XDECREF(array);
 	}
 
 	void set_bias(PyObject* o) {
@@ -67,6 +70,7 @@ public:
 		}
 
 		RNN::set_bias(data);
+        Py_XDECREF(array);
 	}
 
 	void set_W(PyObject* o) {
@@ -80,6 +84,7 @@ public:
 		}
 
 		RNN::set_W(vector(data));
+        Py_XDECREF(array);
 	}
 
     PyObject* evolve(PyObject* o, uint steps) {
@@ -87,6 +92,7 @@ public:
         double* data = (double*)PyArray_DATA(array);
         
         vector out = RNN::evolve(data, steps);
+        Py_XDECREF(array);
         return __convert_from_data(out, m_output_size);
     }
 
@@ -119,7 +125,6 @@ protected:
 			}
 		}
 
-		
 		return out;
 	}
 
@@ -128,12 +133,18 @@ protected:
 						NPY_DOUBLE,1,1, NPY_CARRAY);
 
 		//A few checks
-		if (array == NULL)
+		if (array == NULL) {
+            Py_XDECREF(array);
 			throw rnn_value_exception("Error during conversion. Wrong input?");
-		if (array->nd > 1)
+        }
+		if (array->nd > 1) {
+            Py_XDECREF(array);
 			throw rnn_value_exception("Wrong number of dimensions");
-		if (uint(array->dimensions[0]) != size)
+        }
+		if (uint(array->dimensions[0]) != size) {
+            Py_XDECREF(array);
 			throw rnn_value_exception("Wrong number of elements");
+        }
 
 		return array;
 	}
@@ -143,14 +154,22 @@ protected:
 						NPY_DOUBLE,2,2, NPY_CARRAY);
 
 		//A few checks
-		if (array == NULL)
+		if (array == NULL) {
+            Py_XDECREF(array);
 			throw rnn_value_exception("Error during conversion. Wrong input?");
-		if (array->nd > 2)
+        }
+		if (array->nd > 2) {
+            Py_XDECREF(array);
 			throw rnn_value_exception("Wrong number of dimensions");
-		if (uint(array->dimensions[0]) != size1)
+        }
+		if (uint(array->dimensions[0]) != size1) {
+            Py_XDECREF(array);
 			throw rnn_value_exception("Wrong number of rows");
-		if (uint(array->dimensions[1]) != size2)
+        }
+		if (uint(array->dimensions[1]) != size2) {
+            Py_XDECREF(array);
 			throw rnn_value_exception("Wrong number of columns");
+        }
 
 		return array;
 	}
