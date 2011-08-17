@@ -74,7 +74,18 @@ class RNN
 			this->m_W.reset(new vt[this->m_size * this->m_size]);
 			this->m_bias.reset(new vt[this->m_size]);
 
+            zero_all();
 		}
+
+        void zero_all() {
+            for (unsigned int i=0; i< this->m_size; i++) {
+                access(m_x,i) = 0.0;
+                access(m_bias,i) = 0.0;
+                for (unsigned int j=0; j< this->m_size; j++) {
+                    access(m_W,i,j) = 0.0;
+                }
+            }
+        }
 
 		vector operator ()(vt* input)
 		{
