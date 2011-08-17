@@ -33,12 +33,13 @@ def chromosome_convert(chromosome):
     array_W = np.array(chromosome.genomeList[:-bias_size]).reshape( (net.size-net.input_size, net.size) )
     array_bias = np.array(chromosome.genomeList[len(chromosome.genomeList) - bias_size:] )
     
-    W = np.empty((net.size, net.size))
-    bias = np.empty(net.size)
+    W = np.zeros((net.size, net.size))
+    bias = np.zeros(net.size)
+
     W[net.input_size:, :] = array_W
     bias[net.input_size:] = array_bias
     
-    net.W = W 
+    net.W = W
     net.bias = bias
         
     return net
@@ -50,8 +51,9 @@ def list_convert(params, input_size, output_size, hidden_size):
     array_W = np.array(params[:-bias_size]).reshape( (net.size-net.input_size, net.size) )
     array_bias = np.array(params[len(params) - bias_size:] )
     
-    W = np.empty((net.size, net.size))
-    bias = np.empty(net.size)
+    W = np.zeros((net.size, net.size))
+    bias = np.zeros(net.size)
+    
     W[net.input_size:, :] = array_W
     bias[net.input_size:] = array_bias
     
